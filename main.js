@@ -118,7 +118,64 @@ const keys = {
 };
 
 // --- Input Handling ---
+const keyMap = {
+    'KeyW': 'key-w',
+    'ArrowUp': 'key-w',
+    'KeyS': 'key-s',
+    'ArrowDown': 'key-s',
+    'KeyA': 'key-a',
+    'ArrowLeft': 'key-a',
+    'KeyD': 'key-d',
+    'ArrowRight': 'key-d'
+};
+
+function setKeyActive(code, active) {
+    const elementId = keyMap[code];
+    if (elementId) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            if (active) el.classList.add('active');
+            else el.classList.remove('active');
+        }
+    }
+}
+
+// On-screen controls
+const onScreenKeys = {
+    'key-w': 'forward',
+    'key-s': 'backward',
+    'key-a': 'left',
+    'key-d': 'right'
+};
+
+Object.keys(onScreenKeys).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        const action = onScreenKeys[id];
+
+        const startAction = (e) => {
+            e.preventDefault(); // Prevent text selection/scrolling
+            keys[action] = true;
+            el.classList.add('active');
+        };
+
+        const endAction = (e) => {
+            e.preventDefault();
+            keys[action] = false;
+            el.classList.remove('active');
+        };
+
+        el.addEventListener('mousedown', startAction);
+        el.addEventListener('touchstart', startAction, { passive: false });
+
+        el.addEventListener('mouseup', endAction);
+        el.addEventListener('mouseleave', endAction);
+        el.addEventListener('touchend', endAction);
+    }
+});
+
 window.addEventListener('keydown', (e) => {
+    setKeyActive(e.code, true);
     switch (e.code) {
         case 'ArrowUp':
         case 'KeyW':
@@ -175,6 +232,7 @@ if (cameraToggleEl) {
 }
 
 window.addEventListener('keyup', (e) => {
+    setKeyActive(e.code, false);
     switch (e.code) {
         case 'ArrowUp':
         case 'KeyW':
