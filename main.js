@@ -100,11 +100,11 @@ loader.load('models/tanker_ship/scene.gltf', function (gltf) {
 // --- Physics Variables ---
 const shipStats = {
     speed: 0,
-    maxSpeed: 2.0,
-    acceleration: 0.02,
-    deceleration: 0.01,
+    maxSpeed: 1.0,
+    acceleration: 0.005,
+    deceleration: 0.005,
     rotationSpeed: 0,
-    maxRotationSpeed: 0.02,
+    maxRotationSpeed: 0.008,
     rotationAcceleration: 0.0005,
     rotationDeceleration: 0.0005, // Drift effect
     rotationDamping: 0.95 // Damping for drift
