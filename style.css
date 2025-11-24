@@ -117,22 +117,25 @@ body {
     transform: scale(1.05);
 }
 
-/* WASD Controls */
-#wasd-controls {
-    position: fixed;
+/* On-Screen Controls */
+#controls-steering {
+    position: absolute;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 10px;
     z-index: 1000;
     user-select: none;
 }
 
-.key-row {
+#controls-throttle {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
     display: flex;
     gap: 10px;
+    z-index: 1000;
+    user-select: none;
 }
 
 .key {
