@@ -138,16 +138,41 @@ window.addEventListener('keydown', (e) => {
             break;
         case 'KeyC':
             const toggle = document.getElementById('camera-toggle');
-            if (toggle) toggle.checked = !toggle.checked;
+            if (toggle) {
+                toggle.checked = !toggle.checked;
+                updateUIState();
+            }
             break;
         case 'KeyH':
         case 'Space':
-            // Hold Pan Mode
-            controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
-            document.body.style.cursor = 'grab';
+            // Hold Pan Mode - Only if NOT in follow mode
+            const camToggle = document.getElementById('camera-toggle');
+            if (camToggle && !camToggle.checked) {
+                controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+                document.body.style.cursor = 'grab';
+            }
             break;
     }
 });
+
+function updateUIState() {
+    const toggle = document.getElementById('camera-toggle');
+    const panHint = document.getElementById('pan-hint');
+    if (toggle && panHint) {
+        if (toggle.checked) {
+            panHint.classList.add('disabled-hint');
+        } else {
+            panHint.classList.remove('disabled-hint');
+        }
+    }
+}
+
+// Initial UI state check and listener
+const cameraToggleEl = document.getElementById('camera-toggle');
+if (cameraToggleEl) {
+    cameraToggleEl.addEventListener('change', updateUIState);
+    updateUIState(); // Run once on init
+}
 
 window.addEventListener('keyup', (e) => {
     switch (e.code) {
@@ -310,8 +335,20 @@ function updatePhysics() {
 
     const speedVal = document.getElementById('speed-val');
     const headingVal = document.getElementById('heading-val');
-    if (speedVal) speedVal.innerText = (Math.abs(shipStats.speed) * 100).toFixed(1); // Arbitrary scale for knots
-    if (headingVal) headingVal.innerText = (Math.abs(shipGroup.rotation.y * (180 / Math.PI)) % 360).toFixed(0);
+
+    if (speedVal) {
+        const currentSpeed = (Math.abs(shipStats.speed) * 100).toFixed(1);
+        if (speedVal.innerText !== currentSpeed) {
+            speedVal.innerText = currentSpeed;
+        }
+    }
+
+    if (headingVal) {
+        const currentHeading = (Math.abs(shipGroup.rotation.y * (180 / Math.PI)) % 360).toFixed(0);
+        if (headingVal.innerText !== currentHeading) {
+            headingVal.innerText = currentHeading;
+        }
+    }
 }
 
 function render() {

@@ -57,6 +57,7 @@ body {
     font-size: 14px;
     display: flex;
     justify-content: space-between;
+    transition: opacity 0.3s, color 0.3s;
 }
 
 .toggle-container {
@@ -87,4 +88,10 @@ body {
     border-radius: 4px;
     font-weight: bold;
     margin-right: 5px;
+}
+
+.disabled-hint {
+    opacity: 0.3;
+    color: #888;
+    pointer-events: none;
 }
