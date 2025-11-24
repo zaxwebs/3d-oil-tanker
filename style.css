@@ -1,74 +1,90 @@
 body {
-  margin: 0;
-  overflow: hidden;
-  background-color: #000;
-  font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Inter', sans-serif;
 }
 
 #loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 24px;
-  pointer-events: none;
-  transition: opacity 0.5s;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+    pointer-events: none;
+    transition: opacity 0.5s;
 }
 
 #info {
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  text-align: center;
-  color: white;
-  pointer-events: none;
-  z-index: 100;
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    pointer-events: none;
+    z-index: 100;
 }
 
 #stats-card {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 200px;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-radius: 12px;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: monospace;
-  pointer-events: none;
-  user-select: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: monospace;
+    pointer-events: auto;
+    user-select: none;
 }
 
 #stats-card h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
 }
 
 #stats-card p {
-  margin: 5px 0;
-  font-size: 14px;
-  display: flex;
-  justify-content: space-between;
+    margin: 5px 0;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.toggle-container {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-container input {
+    cursor: pointer;
+}
+
+.toggle-container label {
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .controls-hint {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .controls-hint p span {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: bold;
-  margin-right: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-right: 5px;
 }
