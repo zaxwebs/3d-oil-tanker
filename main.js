@@ -87,7 +87,7 @@ const loader = new GLTFLoader();
 loader.load('models/tanker_ship/scene.gltf', function (gltf) {
     ship = gltf.scene;
     ship.scale.set(0.5, 0.5, 0.5); // Adjust scale as needed
-    ship.position.y = 2; // Sit on top of water
+    ship.position.y = 0.5; // Sit on top of water
     shipGroup.add(ship);
 
     // Hide loading text
@@ -237,6 +237,12 @@ function updatePhysics() {
 
     // Update water
     water.material.uniforms['time'].value += 1.0 / 60.0;
+
+    // Update Stats
+    const speedVal = document.getElementById('speed-val');
+    const headingVal = document.getElementById('heading-val');
+    if (speedVal) speedVal.innerText = (Math.abs(shipStats.speed) * 100).toFixed(1); // Arbitrary scale for knots
+    if (headingVal) headingVal.innerText = (Math.abs(shipGroup.rotation.y * (180 / Math.PI)) % 360).toFixed(0);
 }
 
 function render() {
