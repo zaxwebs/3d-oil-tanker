@@ -136,6 +136,16 @@ window.addEventListener('keydown', (e) => {
         case 'KeyD':
             keys.right = true;
             break;
+        case 'KeyC':
+            const toggle = document.getElementById('camera-toggle');
+            if (toggle) toggle.checked = !toggle.checked;
+            break;
+        case 'KeyH':
+        case 'Space':
+            // Hold Pan Mode
+            controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+            document.body.style.cursor = 'grab';
+            break;
     }
 });
 
@@ -156,6 +166,12 @@ window.addEventListener('keyup', (e) => {
         case 'ArrowRight':
         case 'KeyD':
             keys.right = false;
+            break;
+        case 'KeyH':
+        case 'Space':
+            // Release Pan Mode
+            controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+            document.body.style.cursor = 'default';
             break;
     }
 });
@@ -226,19 +242,72 @@ function updatePhysics() {
     const targetRoll = shipStats.rotationSpeed * 10; // Multiplier for visual effect
     ship.rotation.z = THREE.MathUtils.lerp(ship.rotation.z, targetRoll, 0.05);
 
-    // Camera follow
-    // Simple follow: behind and above
-    const relativeCameraOffset = new THREE.Vector3(0, 30, 80);
-    const cameraOffset = relativeCameraOffset.applyMatrix4(shipGroup.matrixWorld);
+    // Camera follow logic
+    const cameraToggle = document.getElementById('camera-toggle');
+    const isFollowMode = cameraToggle && cameraToggle.checked;
 
-    // Smooth camera
-    camera.position.lerp(cameraOffset, 0.05);
-    camera.lookAt(shipGroup.position);
+    // State for transition
+    if (window.wasFollowMode === undefined) window.wasFollowMode = true;
+    if (window.isTransitioning === undefined) window.isTransitioning = false;
+    if (window.transitionStartTime === undefined) window.transitionStartTime = 0;
+    if (window.transitionStartPos === undefined) window.transitionStartPos = new THREE.Vector3();
+    if (window.transitionTargetPos === undefined) window.transitionTargetPos = new THREE.Vector3();
+
+    if (isFollowMode) {
+        // Reset transition state if we go back to follow mode
+        window.isTransitioning = false;
+        window.wasFollowMode = true;
+
+        // Disable manual controls to prevent fighting/jumping
+        controls.enabled = false;
+
+        // Simple follow: behind and above
+        const relativeCameraOffset = new THREE.Vector3(0, 30, 80);
+        const cameraOffset = relativeCameraOffset.applyMatrix4(shipGroup.matrixWorld);
+
+        // Smooth camera
+        camera.position.lerp(cameraOffset, 0.05);
+        camera.lookAt(shipGroup.position);
+    } else {
+        // Check if we just switched to free mode
+        if (window.wasFollowMode) {
+            window.wasFollowMode = false;
+            window.isTransitioning = true;
+            window.transitionStartTime = performance.now();
+
+            // Capture start position
+            window.transitionStartPos.copy(camera.position);
+
+            // Calculate target position (more back and higher)
+            const relativeTargetOffset = new THREE.Vector3(0, 60, 150);
+            window.transitionTargetPos.copy(relativeTargetOffset.applyMatrix4(shipGroup.matrixWorld));
+        }
+
+        if (window.isTransitioning) {
+            const duration = 1500; // ms
+            const elapsed = performance.now() - window.transitionStartTime;
+            const progress = Math.min(elapsed / duration, 1.0);
+
+            // Ease out cubic
+            const ease = 1 - Math.pow(1 - progress, 3);
+
+            camera.position.lerpVectors(window.transitionStartPos, window.transitionTargetPos, ease);
+            camera.lookAt(shipGroup.position);
+
+            if (progress >= 1.0) {
+                window.isTransitioning = false;
+                controls.target.copy(shipGroup.position);
+            }
+        } else {
+            // Enable manual controls
+            controls.enabled = true;
+            controls.update();
+        }
+    }
 
     // Update water
     water.material.uniforms['time'].value += 1.0 / 60.0;
 
-    // Update Stats
     const speedVal = document.getElementById('speed-val');
     const headingVal = document.getElementById('heading-val');
     if (speedVal) speedVal.innerText = (Math.abs(shipStats.speed) * 100).toFixed(1); // Arbitrary scale for knots
