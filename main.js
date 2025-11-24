@@ -231,6 +231,28 @@ if (cameraToggleEl) {
     updateUIState(); // Run once on init
 }
 
+// Stats toggle for mobile
+const statsToggleBtn = document.getElementById('stats-toggle');
+const statsCard = document.getElementById('stats-card');
+
+if (statsToggleBtn && statsCard) {
+    statsToggleBtn.addEventListener('click', () => {
+        const isVisible = statsCard.classList.contains('mobile-visible');
+
+        if (isVisible) {
+            // Hide stats
+            statsCard.classList.remove('mobile-visible');
+            statsToggleBtn.classList.remove('active');
+            document.body.classList.remove('stats-visible');
+        } else {
+            // Show stats
+            statsCard.classList.add('mobile-visible');
+            statsToggleBtn.classList.add('active');
+            document.body.classList.add('stats-visible');
+        }
+    });
+}
+
 window.addEventListener('keyup', (e) => {
     setKeyActive(e.code, false);
     switch (e.code) {
